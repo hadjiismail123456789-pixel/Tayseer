@@ -11,20 +11,19 @@ tayseer-updates/
 
 ## Publishing a new update (maintainer)
 
-No version bumps, no build numbers. The phone updates whenever the published
-bundle checksum differs from the running one. The visible app version
-(`package.json`) moves ONLY on real milestones.
+Every deploy carrying changes bumps the version (package.json, e.g. `1.0.8` ->
+`1.0.9`). Phones update when the published version is newer than the running one.
 
-1. `cd tayseer` then `npm run build`
-2. `npx @capgo/cli bundle zip` -> prints the zip path + sha256 `checksum`
-3. Upload the zip OVER `tayseer-updates/bundles/com.tayseer.quran_1.0.8.zip`
-   in this repo (same filename, Contents API with the file's `sha`)
-4. Update `tayseer-updates/latest.json` (same `version`, new `checksum`):
+1. Bump `tayseer/package.json` version
+2. `cd tayseer` then `npm run build`
+3. `npx @capgo/cli bundle zip` -> prints the zip path + sha256 `checksum`
+4. Upload the zip to `tayseer-updates/bundles/` in this repo
+5. Update `tayseer-updates/latest.json` (raise `version`, new `url` + `checksum`):
    ```json
-   { "version": "1.0.8", "url": "https://raw.githubusercontent.com/hadjiismail123456789-pixel/Tayseer/main/tayseer-updates/bundles/com.tayseer.quran_1.0.8.zip", "checksum": "<new sha256>" }
+   { "version": "1.0.9", "url": "https://raw.githubusercontent.com/hadjiismail123456789-pixel/Tayseer/main/tayseer-updates/bundles/<file>.zip", "checksum": "<sha256>" }
    ```
-5. Delete the local zip (they accumulate otherwise).
-6. Done. Phones stage the new bundle on next launch and apply it on the
+6. Delete the local zip (they accumulate otherwise).
+7. Done. Phones stage the new bundle on next launch and apply it on the
    following start. Bad bundles roll back automatically.
 
 ## How the phone decides
