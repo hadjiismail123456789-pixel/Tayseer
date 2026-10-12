@@ -11,15 +11,19 @@ tayseer-updates/
 
 ## Publishing a new update (maintainer)
 
-1. Bump `tayseer/package.json` version, e.g. `1.0.1` -> `1.0.2`
+The visible app version (package.json, e.g. `1.0.8`) moves ONLY on real milestones.
+Everyday deploys bump the internal OTA build counter instead (`src/lib/build.ts`).
+
+1. Set the next build number in `tayseer/src/lib/build.ts` (`OTA_BUILD`), e.g. `109`
 2. `cd tayseer` then `npm run build`
 3. `npx @capgo/cli bundle zip` -> prints the zip path + sha256 `checksum`
-4. Upload the zip to `tayseer-updates/bundles/` in this repo
-5. Update `tayseer-updates/latest.json`:
+4. Rename the zip to include the build, e.g. `com.tayseer.quran_1.0.8_b109.zip`
+5. Upload the zip to `tayseer-updates/bundles/` in this repo
+6. Update `tayseer-updates/latest.json` (keep `version` frozen, raise `build`):
    ```json
-   { "version": "1.0.2", "url": "https://raw.githubusercontent.com/hadjiismail123456789-pixel/Tayseer/main/tayseer-updates/bundles/<file>.zip", "checksum": "<sha256>" }
+   { "version": "1.0.8", "build": 109, "url": "https://raw.githubusercontent.com/hadjiismail123456789-pixel/Tayseer/main/tayseer-updates/bundles/<file>.zip", "checksum": "<sha256>" }
    ```
-6. Done. Phones pick it up on next launch and apply it on the following start.
+7. Done. Phones compare `build` numbers and stage newer bundles automatically.
    Bad bundles roll back automatically (the app calls `notifyAppReady()` on boot).
 
 ## How the phone decides
